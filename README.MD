@@ -1,47 +1,63 @@
-# my-budget
+# My Budget
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-    </a>
-</div>
-<br/>
-
-This [Refine](https://github.com/refinedev/refine) project was generated with [create refine-app](https://github.com/refinedev/refine/tree/master/packages/create-refine-app).
+A budgeting application designed to help you plan and track your monthly expenses effectively. Built with [Next.js](https://nextjs.org/), [Refine](https://refine.dev/), [Prisma](https://www.prisma.io/), and [Supabase](https://supabase.com/).
 
 ## Getting Started
 
-A React Framework for building internal tools, admin panels, dashboards & B2B apps with unmatched flexibility ✨
+### Prerequisites
 
-Refine's hooks and components simplifies the development process and eliminates the repetitive tasks by providing industry-standard solutions for crucial aspects of a project, including authentication, access control, routing, networking, state management, and i18n.
+-   Node.js (>=20)
+-   Docker (required for local Supabase instance)
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    cd my-budget
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+3.  **Environment Setup**: Ensure you have a `.env` file configured with the necessary environment variables for Supabase and your application.
+
+### Database Setup
+
+This project uses a local Supabase instance managed via Docker.
+
+1.  **Start Supabase**:
+    Initialize the local Supabase services.
+    ```bash
+    npm run db:init
+    ```
+    *(Executes `npx supabase start`)*
+
+2.  **Push Schema**:
+    Apply the database schema.
+    ```bash
+    npm run db:push
+    ```
+
+### Running the Application
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
 ## Available Scripts
 
-### Running the development server.
-
-```bash
-    npm run dev
-```
-
-### Building for production.
-
-```bash
-    npm run build
-```
-
-### Running the production server.
-
-```bash
-    npm run start
-```
-
-## Learn More
-
-To learn more about **Refine**, please check out the [Documentation](https://refine.dev/docs)
-
-- **Supabase Data Provider** [Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
-- **Material UI** [Docs](https://refine.dev/docs/ui-frameworks/mui/tutorial/)
-
-## License
-
-MIT
+-   `npm run dev`: Starts the Next.js development server.
+-   `npm run build`: Builds the application for production.
+-   `npm run start`: Starts the production server.
+-   `npm run db:init`: Starts the local Supabase instance.
+-   `npm run db:stop`: Stops the local Supabase instance.
+-   `npm run db:push`: Pushes changes to the local Supabase database.
+-   `npm run db:reset`: Resets the local database.
+-   `npm run db:migration`: Pushes Prisma schema changes and generates a Supabase migration diff.

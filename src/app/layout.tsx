@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { DevtoolsProvider } from "@providers/devtools";
 import { GitHubBanner, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
@@ -8,9 +9,6 @@ import {
 import routerProvider from "@refinedev/nextjs-router";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import React, { Suspense } from "react";
-
-import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProviderClient } from "@providers/auth-provider/auth-provider.client";
 import { dataProvider } from "@providers/data-provider";
 
@@ -37,26 +35,24 @@ export default async function RootLayout({
         <Suspense>
           <GitHubBanner />
           <RefineKbarProvider>
-            <ColorModeContextProvider defaultMode={defaultMode}>
-              <RefineSnackbarProvider>
-                <DevtoolsProvider>
-                  <Refine
-                    routerProvider={routerProvider}
-                    authProvider={authProviderClient}
-                    dataProvider={dataProvider}
-                    notificationProvider={useNotificationProvider}
-                    options={{
-                      syncWithLocation: true,
-                      warnWhenUnsavedChanges: true,
-                      projectId: "UNyGpe-yROyt6-pe7VXU",
-                    }}
-                  >
-                    {children}
-                    <RefineKbar />
-                  </Refine>
-                </DevtoolsProvider>
-              </RefineSnackbarProvider>
-            </ColorModeContextProvider>
+            <RefineSnackbarProvider>
+              <DevtoolsProvider>
+                <Refine
+                  routerProvider={routerProvider}
+                  authProvider={authProviderClient}
+                  dataProvider={dataProvider}
+                  notificationProvider={useNotificationProvider}
+                  options={{
+                    syncWithLocation: true,
+                    warnWhenUnsavedChanges: true,
+                    projectId: "UNyGpe-yROyt6-pe7VXU",
+                  }}
+                >
+                  {children}
+                  <RefineKbar />
+                </Refine>
+              </DevtoolsProvider>
+            </RefineSnackbarProvider>
           </RefineKbarProvider>
         </Suspense>
       </body>
