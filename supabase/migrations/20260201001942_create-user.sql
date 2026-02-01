@@ -1,9 +1,8 @@
 
   create table "public"."users" (
-    "id" uuid not null,
+    "id" uuid not null default gen_random_uuid(),
     "email" text not null,
     "createdAt" timestamp(3) without time zone not null default CURRENT_TIMESTAMP,
-    "updatedAt" timestamp(3) without time zone not null,
     "firstName" text not null,
     "lastName" text not null
       );
@@ -12,6 +11,26 @@
 CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);
 
 alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+begin
+  insert into public.users (id, email, "firstName", "lastName")
+  values (
+    new.id, 
+    new.email, 
+    new.raw_user_meta_data->>'firstName', 
+    new.raw_user_meta_data->>'lastName'
+  );
+  return new;
+end;
+$function$
+;
 
 grant delete on table "public"."users" to "anon";
 
@@ -55,22 +74,6 @@ grant truncate on table "public"."users" to "service_role";
 
 grant update on table "public"."users" to "service_role";
 
--- Create a function to handle new user signups
-create function public.handle_new_user()
-returns trigger as $$
-begin
-  insert into public.users (id, email, "firstName", "lastName")
-  values (
-    new.id, 
-    new.email, 
-    new.raw_user_meta_data->>'firstName', 
-    new.raw_user_meta_data->>'lastName'
-  );
-  return new;
-end;
-$$ language plpgsql security definer;
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- Trigger the function every time a user is created in auth.users
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+
