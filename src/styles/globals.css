@@ -1,0 +1,4 @@
+/* Hides the link pointing to root in the sidebar */
+a[aria-label="Dashboard"] {
+  display: none !important;
+}

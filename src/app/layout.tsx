@@ -12,6 +12,8 @@ import { dataProvider } from "@providers/data-provider";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import theme from "@theme";
+import { RESOURCES } from "@config/resources";
+import "../styles/globals.css";
 
 export const metadata: Metadata = {
   title: "My Budge",
@@ -37,6 +39,7 @@ export default async function RootLayout({
                 authProvider={authProviderClient}
                 dataProvider={dataProvider}
                 notificationProvider={useNotificationProvider}
+                resources={RESOURCES}
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
