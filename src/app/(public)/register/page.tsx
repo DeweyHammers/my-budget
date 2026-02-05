@@ -7,7 +7,7 @@ export default async function RegisterPage() {
   const { authenticated, redirectTo } = await authProviderServer.check();
 
   if (authenticated) {
-    redirect(redirectTo || "/dashboard/list");
+    redirect(redirectTo || "/categories/list");
   }
 
   return (

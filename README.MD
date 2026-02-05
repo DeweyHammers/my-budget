@@ -60,7 +60,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 This project follows a standard Next.js App Router structure with Supabase and Prisma integration.
 
 - **`src/app/`**: Application routes and pages.
-  - **(protected)**: Contains routes that require user authentication (e.g., the dashboard).
+  - **(protected)**: Contains routes that require user authentication (e.g., the categories).
   - **(public)**: Contains public routes like the landing page, login, and registration.
 - **`src/providers/`**: Context providers for managing global state such as authentication (`auth-provider`) and data fetching (`data-provider`).
 - **`src/theme/`**: Theme configuration files for Material UI styling.

@@ -7,7 +7,7 @@ export default async function LoginPage() {
   const { authenticated, redirectTo } = await authProviderServer.check();
 
   if (authenticated) {
-    redirect(redirectTo || "/dashboard/list");
+    redirect(redirectTo || "/categories/list");
   }
 
   return <AuthPage type="login" title={<Title fontSize="3rem" clickHome />} />;

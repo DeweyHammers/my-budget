@@ -1,6 +1,6 @@
 import { authProviderServer } from "@providers/auth-provider/auth-provider.server";
-import { ThemedLayout } from "@refinedev/mui";
 import { redirect } from "next/navigation";
+import SidebarHeader from "./_components/app-themed-layout";
 
 export default async function ProtectedLayout({
   children,
@@ -11,5 +11,5 @@ export default async function ProtectedLayout({
     redirect(redirectTo || "/login");
   }
 
-  return <ThemedLayout>{children}</ThemedLayout>;
+  return <SidebarHeader>{children}</SidebarHeader>;
 }
