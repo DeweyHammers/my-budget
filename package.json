@@ -10,10 +10,10 @@
     "build": "next build",
     "start": "next start",
     "db:init": "npx supabase start",
-    "db:push": "npx supabase db push",
-    "db:stop": "npx supabase stop",
+    "db:push": "npx supabase db diff",
     "db:reset": "npx supabase db reset",
-    "db:migration": "npx prisma db push && npx supabase db diff -f"
+    "db:migration": "npx prisma db push && npx supabase db diff -f",
+    "db:migration:create": "npx supabase migration new"
   },
   "dependencies": {
     "@emotion/react": "^11.8.2",
@@ -21,6 +21,7 @@
     "@mui/icons-material": "^6.1.6",
     "@mui/lab": "^6.0.0-beta.14",
     "@mui/material": "^6.1.7",
+    "@mui/material-nextjs": "^7.3.7",
     "@mui/x-data-grid": "^7.22.2",
     "@prisma/client": "^6.19.2",
     "@refinedev/cli": "^2.16.48",
