@@ -16,7 +16,7 @@ import { RESOURCES } from "@config/resources";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "My Budge",
+  title: "My Budget",
   description: "A budging app",
   icons: {
     icon: "/favicon.ico",
