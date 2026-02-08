@@ -5,8 +5,12 @@ language plpgsql
 security definer
 as $function$
 begin
-  insert into public.users (id, email)
-  values (new.id, new.email);
+  insert into public.users (id, email, "updatedAt")
+  values (new.id, new.email, now());
+
+  insert into public.plans ("userId", "updatedAt")
+  values (new.id, now());
+
   return new;
 end;
 $function$;

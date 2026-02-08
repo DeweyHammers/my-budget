@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -17,8 +11,126 @@ datasource db {
 model User {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String
-  createdAt DateTime @default(now())
   name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  accounts     Account[]
+  transactions Transaction[]
+  plan         Plan?
 
   @@map("users")
+}
+
+model Plan {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assign    Decimal  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign Keys 
+  userId String @unique @db.Uuid
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categories   Category[]
+  transactions Transaction[]
+
+  @@map("plans")
+}
+
+model Account {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  balance   Decimal  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign Keys
+  userId String @db.Uuid
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("accounts")
+}
+
+model Transaction {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date      DateTime
+  payee     String
+  outflow   Decimal  @default(0)
+  inflow    Decimal  @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign Keys
+  userId    String  @db.Uuid
+  accountId String  @db.Uuid
+  planId    String? @db.Uuid
+  itemId    String? @db.Uuid
+
+  // Relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  plan    Plan?   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  item    Item?   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model Category {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  items     Item[]
+  sections  Section[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Foreign Keys
+  planId String @db.Uuid
+
+  // Relations
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("categories")
+}
+
+model Section {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign Keys
+  categoryId String @db.Uuid
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  items    Item[]
+
+  @@map("sections")
+}
+
+model Item {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  available     Decimal   @default(0)
+  sectionAssign Decimal?  @default(0)
+  dewDate       DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Foreign Keys
+  categoryId String @db.Uuid
+  sectionId  String @db.Uuid
+
+  // Relations
+  category     Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  section      Section       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("items")
 }
