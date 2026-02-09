@@ -20,6 +20,13 @@ export default function CustomDataGrid({
       {...finalDataGridProps}
       columns={columns}
       pageSizeOptions={[10, 25, 50, 100]}
+      disableRowSelectionOnClick
+      disableColumnFilter
+      sx={{
+        "& .MuiTablePagination-actions": {
+          paddingRight: "50px",
+        },
+      }}
       slots={{
         noRowsOverlay: () => (
           <NoRowsOverlay message={noRowsMessage || "No rows to display."} />
