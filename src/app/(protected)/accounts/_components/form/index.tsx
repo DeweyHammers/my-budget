@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { AccountFormProps } from "./types";
 import { Create, Edit, SaveButton } from "@refinedev/mui";
@@ -10,7 +11,10 @@ import {
   BaseRecord,
   HttpError,
   useCreate,
+  useGetIdentity,
   useNotification,
+  useOne,
+  useUpdate,
 } from "@refinedev/core";
 import {
   DefaultValues,
@@ -21,12 +25,13 @@ import {
 import defaultValues from "./default-values";
 import { TextField } from "@app/(protected)/_components/form/form-components";
 import { useRouter } from "next/navigation";
-import { Account } from "@generated/prisma/client";
+import { Account, User } from "@generated/prisma/client";
 
 export default function AccountForm<
   TRecord extends BaseRecord = BaseRecord,
   TVariables extends FieldValues = FieldValues
->({ action, isModal }: AccountFormProps) {
+>({ action, id, isModal }: AccountFormProps) {
+  const { data: identity } = useGetIdentity<User>();
   const { open } = useNotification();
   const router = useRouter();
 
@@ -34,10 +39,18 @@ export default function AccountForm<
     router.back();
   };
 
+  const {
+    query: { data: accountData },
+  } = useOne<Account, HttpError>({
+    resource: "accounts",
+    id,
+  });
+
   const form = useForm<TRecord, HttpError, TVariables>({
     refineCoreProps: {
       resource: "accounts",
       action,
+      id,
       queryOptions: {
         enabled: false,
       },
@@ -51,6 +64,10 @@ export default function AccountForm<
     successNotification: false,
     errorNotification: false,
   });
+  const { mutateAsync: updateAccount } = useUpdate<Account>({
+    successNotification: false,
+    errorNotification: false,
+  });
 
   const handleOnSubmit = async (values: TVariables) => {
     try {
@@ -61,7 +78,15 @@ export default function AccountForm<
       if (action === "create") {
         await createAccount({
           resource: "accounts",
-          values: { ...accountsData, name: values.name },
+          values: { ...accountsData, name: values.name, userId: identity?.id },
+        });
+      }
+
+      if (action === "edit") {
+        await updateAccount({
+          id,
+          resource: "accounts",
+          values: { ...accountsData, name: values.name, updatedAt: new Date() },
         });
       }
 
@@ -93,7 +118,16 @@ export default function AccountForm<
     refineCore: { formLoading },
     saveButtonProps,
     handleSubmit,
+    reset,
   } = form as UseFormReturn & typeof form;
+
+  useEffect(() => {
+    if (accountData?.data) {
+      reset({
+        name: accountData?.data.name || "",
+      });
+    }
+  }, [accountData, reset]);
 
   const Wrapper = action === "create" ? Create : Edit;
   const title = action === "create" ? "Create new account" : "Edit account";
@@ -121,6 +155,7 @@ export default function AccountForm<
         goBack={isModal ? null : undefined}
         isLoading={formLoading}
         saveButtonProps={undefined as any}
+        headerButtons={<></>}
         footerButtons={footerButtons}
       >
         <Box

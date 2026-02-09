@@ -28,6 +28,7 @@ export default function TextFieldComponent({
           <TextField
             {...textFieldProps}
             {...restField}
+            value={value ?? ""}
             onChange={onChange}
             inputRef={ref}
             name={name}

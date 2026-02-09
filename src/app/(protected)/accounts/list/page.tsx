@@ -10,6 +10,7 @@ import { Button } from "@mui/material";
 import { AddRounded } from "@mui/icons-material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ActionButtons from "./_components/action-buttons";
 
 export default function AccountsPage() {
   const pathname = usePathname();
@@ -21,13 +22,20 @@ export default function AccountsPage() {
         field: "name",
         headerName: "Name",
         renderCell: ({ row }) => row.name ?? "—",
-        minWidth: 150,
+        minWidth: 500,
       },
       {
         field: "balance",
         headerName: "Balance",
-        renderCell: ({ row }) => row.name ?? "—",
-        minWidth: 150,
+        renderCell: ({ row }) => row.balance?.toLocaleString() ?? "—",
+        minWidth: 500,
+      },
+      {
+        field: "actions",
+        headerName: "",
+        sortable: false,
+        minWidth: 700,
+        renderCell: ({ row }) => <ActionButtons account={row} />,
       },
     ];
   }, []);
